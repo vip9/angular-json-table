@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>JSON to Table</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+
+</head>
+
+<body ng-app="myApp">
+
+    <nav class="navbar navbar-static-top navbar-dark bg-inverse">
+        <a class="navbar-brand" href="#">JSON to Table</a>
+    </nav>
+
+
+    <div class="container" ng-controller="UrlController">
+            <div class="row">
+
+              <div class="form-group">
+                <label for="exampleTextarea">URL</label>
+                <textarea class="form-control"type="url" placeholder="http://..." id="exampleTextarea" rows="3" ng-model="url"></textarea>
+                <button type="submit" class="btn btn-primary" ng-click="get()">Get</button>
+
+              </div>
+
+            </div>
+    </div>
+
+    <div class="container-fluid">
+
+
+        <div class="row">
+
+            <div class="table-responsive">
+
+                <div ng-controller="ListCtrl">
+
+                    <h1>{{test}}</h1>
+
+                    <table width="100%" class="table">
+                        <thead>
+                            <tr>
+                                <th ng-repeat="(header, value) in json.data[0]">{{header}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="row in json.data">
+                                <td ng-repeat="cell in row">{{cell}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.5/angular.min.js" integrity="sha256-RPPsQcSPq5bHR3vDUWpr9XR/NHMe9QAJ8Uwffw3LBDM=" integrity="sha384-hXNI9Cb8OJC3+q10tEC7RUzaDEWKjIQiE1lg+tFIrttefIG+ScUCKqOlQVEqcmM0" integrity="sha512-y2SOwfsp2w/M2K9LzWRyFd/V62w3z9frSvAB96p7AJlyNIF7O40A6ezctVEgyI2gap6ikSoFpSrtC8Gztmjp4A=="
+    crossorigin="anonymous"></script>
+
+    <script>
+        var jsonTableApp = angular.module('myApp', [])
+            .run(function($rootScope){
+            })
+            .factory('JsonDataService', function() {
+                return {
+                    json: { data: []}
+                };
+            });;
+
+        jsonTableApp.controller('UrlController', ['$rootScope', '$scope', '$http', 'JsonDataService', function ($rootScope, $scope, $http, JsonDataService) {
+            $scope.url = "";
+
+            $scope.get = function() {
+                $http.get('http://beta.json-generator.com/api/json/get/4JtbQ9E1G').success(function(data) {
+                    JsonDataService.json.data = data;
+                });
+            }
+        }]);
+
+        jsonTableApp.controller('ListCtrl', function($rootScope, $scope, $http, JsonDataService) {
+
+            $scope.test = "test4";
+
+            $scope.json = JsonDataService.json;
+
+
+        });
+    </script>
+</body>
+
+</html>
